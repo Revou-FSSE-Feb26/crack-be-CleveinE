@@ -3,7 +3,7 @@ services:
     name: carchery-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run db:generate
+    buildCommand: npm install && npm run db:generate && npm run db:migrate
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:

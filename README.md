@@ -5,11 +5,21 @@ REST API untuk C'Archery Booking Management System.
 ## Tech stack
 - Node.js + Express
 - JWT authentication, bcrypt password hashing, CORS
-- Prisma schema PostgreSQL tersedia di `prisma/schema.prisma` sebagai kontrak database deployment
+- Prisma Client + PostgreSQL persistence
+
+## Project structure
+- `server.js`: process lifecycle and graceful shutdown
+- `src/app.js`: Express middleware and router composition
+- `src/routes/`: auth, catalog, and booking routers
+- `src/store.js`: Prisma queries with an explicit no-database development fallback
+- `src/db.js`: Prisma connection and seed bootstrap
+- `prisma/schema.prisma` and `prisma/migrations/`: typed schema, indexes, foreign keys, and reproducible migration
 
 ## Run locally
 ```bash
 npm install
+npm run db:generate
+npm run db:migrate
 npm run dev
 ```
 Server berjalan di `http://localhost:4000`.
@@ -41,7 +51,7 @@ Seeded accounts: `alya@carchery.id` / `password` (USER) dan `admin@carchery.id` 
 ```
 
 ## Database diagram
-ERD source ada di `prisma/schema.prisma`. Jalankan `npm run db:generate` setelah `DATABASE_URL` tersedia untuk deployment PostgreSQL, lalu `npm run db:push` pada database baru.
+ERD source ada di `prisma/schema.prisma`. Jalankan `npm run db:generate` lalu `npm run db:migrate` setelah `DATABASE_URL` tersedia untuk deployment PostgreSQL. Migration pertama membuat seluruh tabel, foreign key, dan indexes.
 
 ```mermaid
 erDiagram
@@ -58,7 +68,7 @@ erDiagram
 ```
 
 ## Security and persistence
-Passwords are hashed with bcrypt, JWT routes reject missing or invalid bearer tokens, and admin mutations require the `admin` role. With `DATABASE_URL`, Prisma connects to PostgreSQL on startup and reports its state through `/api/health`; local development without a database uses an explicit memory fallback.
+Passwords are hashed with bcrypt, JWT routes reject missing or invalid bearer tokens, admin mutations require the `admin` role, and update routes whitelist editable fields. With `DATABASE_URL`, all user, catalog, and booking reads/writes use Prisma PostgreSQL queries and the process reports its state through `/api/health`; local development without a database uses an explicit memory fallback.
 
 ## Deployment
 Deploy ke Render/Railway dengan build command `npm install && npm run db:generate`, start command `npm start`, dan environment variables `DATABASE_URL`, `JWT_SECRET`, serta `NODE_VERSION=20`. Template Render tersedia di `render.yaml`. Frontend memakai URL deployment melalui `VITE_API_URL`.
