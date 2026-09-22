@@ -5,6 +5,8 @@ export const prisma = process.env.DATABASE_URL ? new PrismaClient() : null;
 export async function connectDatabase() {
   if (!prisma) return { configured: false, connected: false };
   await prisma.$connect();
+  const { seedDatabase } = await import('./store.js');
+  await seedDatabase();
   return { configured: true, connected: true };
 }
 

@@ -40,6 +40,7 @@ model Bow {
 	name        String
 	description String
 	price       Int
+	level       String    @default("All levels")
 	bookings    Booking[]
 }
 
@@ -48,6 +49,7 @@ model Booking {
 	date       DateTime
 	time       String
 	duration   Int
+	bringOwnBow Boolean   @default(true)
 	status     BookingStatus @default(CONFIRMED)
 	total      Int
 	userId     String
@@ -59,6 +61,9 @@ model Booking {
 	lane       Lane          @relation(fields: [laneId], references: [id])
 	bow        Bow?          @relation(fields: [bowId], references: [id])
 	createdAt  DateTime      @default(now())
+	@@index([date])
+	@@index([userId])
+	@@index([venueId, laneId, date, time])
 }
 
 enum Role {
