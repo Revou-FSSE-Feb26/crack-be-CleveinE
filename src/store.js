@@ -12,7 +12,7 @@ export async function seedDatabase() {
     for (const user of memoryUsers) await transaction.user.create({ data: user });
     for (const venue of memoryVenues) await transaction.venue.create({ data: { id: venue.id, name: venue.name, type: venue.type, description: venue.description, price: venue.price, lanes: { create: venue.lanes.map(lane => ({ id: lane.id, name: lane.name })) } } });
     for (const bow of memoryBows) await transaction.bow.create({ data: bow });
-    for (const booking of memoryBookings) await transaction.booking.create({ data: { ...booking, date: new Date(`${booking.date}T12:00:00`), status: booking.status } });
+    for (const booking of memoryBookings) await transaction.booking.create({ data: { ...booking, date: new Date(`${booking.date}T12:00:00`), createdAt: new Date(`${booking.createdAt}T12:00:00`), status: booking.status } });
   });
 }
 
