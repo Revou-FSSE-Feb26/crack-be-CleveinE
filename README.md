@@ -15,6 +15,14 @@ REST API untuk C'Archery Booking Management System.
 - `src/db.js`: Prisma connection and seed bootstrap
 - `prisma/schema.prisma` and `prisma/migrations/`: typed schema, indexes, foreign keys, and reproducible migration
 
+## Implementation order
+1. Initialize Express architecture and PostgreSQL schema/migration.
+2. Add catalog and booking CRUD plus seed data.
+3. Add bcrypt registration/login, JWT protection, role checks, and validation.
+4. Verify health, auth, catalog, and booking flows against sample data.
+5. Connect the frontend and complete end-to-end checks.
+6. Deploy after PostgreSQL and hosting credentials are configured.
+
 ## Run locally
 ```bash
 npm install
@@ -71,7 +79,7 @@ erDiagram
 Passwords are hashed with bcrypt, JWT routes reject missing or invalid bearer tokens, admin mutations require the `admin` role, and update routes whitelist editable fields. With `DATABASE_URL`, all user, catalog, and booking reads/writes use Prisma PostgreSQL queries and the process reports its state through `/api/health`; local development without a database uses an explicit memory fallback.
 
 ## Deployment
-Deploy ke Render/Railway dengan build command `npm install && npm run db:generate`, start command `npm start`, dan environment variables `DATABASE_URL`, `JWT_SECRET`, serta `NODE_VERSION=20`. Template Render tersedia di `render.yaml`. Frontend memakai URL deployment melalui `VITE_API_URL`.
+Deploy ke Render/Railway dengan build command `npm install && npm run db:generate && npm run db:migrate`, start command `npm start`, dan environment variables `DATABASE_URL`, `JWT_SECRET`, serta `NODE_VERSION=20`. Template Render tersedia di `render.yaml`. Frontend memakai URL deployment melalui `VITE_API_URL`.
 
 Deployment links:
 - Frontend: `https://carchery-web.vercel.app` (replace with actual URL)
